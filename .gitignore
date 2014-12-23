@@ -12,3 +12,6 @@ packages/
 
 # Include when developing application packages.
 pubspec.lock
+
+# Silly macs
+.DS_Store
