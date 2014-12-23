@@ -41,8 +41,8 @@ class Renderer
     glContext.viewport(0, 0, width, height);
     glContext.clear(WebGL.RenderingContext.COLOR_BUFFER_BIT | WebGL.RenderingContext.DEPTH_BUFFER_BIT);
     
-    _pMatrix = makePerspectiveMatrix(radians(45.0), width / height, 0.1, 100.0);
-    // _pMatrix = makeOrthographicMatrix(-10.0, 10.0, -6.0, 6.0, -10.0, 10.0);
+    // _pMatrix = makePerspectiveMatrix(radians(45.0), width / height, 0.1, 100.0);
+    _pMatrix = makeOrthographicMatrix(-10.0, 10.0, -6.5, 6.5, -10.0, 10.0);
     
     _mvMatrix = new Matrix4.identity();
     _mvMatrix.translate(position);
@@ -165,7 +165,7 @@ class Renderer
     glContext.clearDepth(1.0);
     
     _camera = new Camera();
-    _camera.Position = new Vector3(5.0, 5.0, 5.0);
+    _camera.Position = new Vector3(0.5, 0.5, 0.5);
     _camera.Target = new Vector3(0.0, 0.0, 0.0);
     
     _initShaders();

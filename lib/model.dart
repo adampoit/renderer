@@ -2,6 +2,7 @@ library model;
 
 import 'dart:web_gl' as WebGL;
 import 'dart:typed_data';
+import 'package:vector_math/vector_math.dart';
 
 class Model
 { 
@@ -14,8 +15,8 @@ class Model
     _cubeVertexPositionBuffer = glContext.createBuffer();
     glContext.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _cubeVertexPositionBuffer);
          
-     // fill "current buffer" with triangle verticies
-     List<double> vertices = [
+    // fill "current buffer" with triangle verticies
+    List<double> vertices = [
          // Front face
          -1.0, -1.0,  1.0,
           1.0, -1.0,  1.0,
@@ -66,6 +67,11 @@ class Model
          ];
      glContext.bufferDataTyped(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(_cubeVertexIndices), WebGL.RenderingContext.STATIC_DRAW);
   }
+  
+  Vector3 get Position                => _position;
+          set Position(Vector3 value) => _position = value;
+  
+  Vector3 _position = new Vector3(0.0, 0.0, 0.0);  
   
   WebGL.Buffer _cubeVertexIndexBuffer;
   WebGL.Buffer _cubeVertexPositionBuffer;
