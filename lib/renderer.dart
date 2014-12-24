@@ -47,12 +47,15 @@ class Renderer
     _mvMatrix = new Matrix4.identity();
     _mvMatrix.translate(position);
     
-    glContext.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _model.VertexPositionBuffer);
-    glContext.vertexAttribPointer(_aVertexPosition, _dimensions, WebGL.RenderingContext.FLOAT, false, 0, 0);
-    
-    glContext.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, _model.VertexIndexBuffer);
-    _setMatrixUniforms();
-    glContext.drawElements(WebGL.RenderingContext.TRIANGLES, 36, WebGL.RenderingContext.UNSIGNED_SHORT, 0); // triangles, start at 0, total 3
+    if (_model.IsLoaded)
+    {
+      glContext.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _model.VertexPositionBuffer);
+      glContext.vertexAttribPointer(_aVertexPosition, _dimensions, WebGL.RenderingContext.FLOAT, false, 0, 0);
+     
+      glContext.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, _model.VertexIndexBuffer);
+      _setMatrixUniforms();
+      glContext.drawElements(WebGL.RenderingContext.TRIANGLES, 36, WebGL.RenderingContext.UNSIGNED_SHORT, 0); // triangles, start at 0, total 3
+    }
     
     window.requestAnimationFrame(update);
   }
