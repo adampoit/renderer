@@ -8,13 +8,7 @@ import 'dart:html';
 
 class Model
 { 
-  WebGL.Buffer get VertexPositionBuffer => _cubeVertexPositionBuffer;
-  
-  WebGL.Buffer get VertexIndexBuffer => _cubeVertexIndexBuffer;
-  
-  bool get IsLoaded => _loaded;
-  
-  void init(WebGL.RenderingContext glContext)
+  void init(WebGL.RenderingContext glContext, String url)
   {
     _cubeVertexPositionBuffer = glContext.createBuffer();
     glContext.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _cubeVertexPositionBuffer);
@@ -23,7 +17,7 @@ class Model
     glContext.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, _cubeVertexIndexBuffer);
     
     var request = HttpRequest
-        .getString('http://localhost:5000/cube.json')
+        .getString(url)
         .then((content) => _onDataLoaded(content, glContext));
   }
   
@@ -37,12 +31,17 @@ class Model
     _loaded = true;
   }
   
+  WebGL.Buffer get VertexPositionBuffer => _cubeVertexPositionBuffer;
+    
+  WebGL.Buffer get VertexIndexBuffer => _cubeVertexIndexBuffer;
+    
+  bool get IsLoaded => _loaded;
+  
   Vector3 get Position                => _position;
           set Position(Vector3 value) => _position = value;
   
   Vector3 _position = new Vector3(0.0, 0.0, 0.0);
   bool _loaded = false;
-  
   WebGL.Buffer _cubeVertexIndexBuffer;
   WebGL.Buffer _cubeVertexPositionBuffer;
 }

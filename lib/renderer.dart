@@ -28,8 +28,6 @@ class Renderer
   int _aVertexPosition;
   int _dimensions = 3;
   
-  Vector3 position = new Vector3(0.0, 0.0, 0.0);
-  
   Camera _camera;
   Model _model;
   
@@ -45,7 +43,7 @@ class Renderer
     _pMatrix = makeOrthographicMatrix(-10.0, 10.0, -6.5, 6.5, -10.0, 10.0);
     
     _mvMatrix = new Matrix4.identity();
-    _mvMatrix.translate(position);
+    _mvMatrix.translate(_model.Position);
     
     if (_model.IsLoaded)
     {
@@ -58,26 +56,6 @@ class Renderer
     }
     
     window.requestAnimationFrame(update);
-  }
-  
-  void MoveRight()
-  {
-    position += new Vector3(0.0, 0.0, -0.1);
-  }
-  
-  void MoveLeft()
-  {
-    position += new Vector3(0.0, 0.0, 0.1);
-  }
-  
-  void MoveUp()
-  {
-    position += new Vector3(-0.1, 0.0, 0.0);
-  }
-  
-  void MoveDown()
-  {
-    position += new Vector3(0.1, 0.0, 0.0);
   }
   
   void _initShaders() 
@@ -145,7 +123,6 @@ class Renderer
     _uPMatrix = glContext.getUniformLocation(_shaderProgram, "uPMatrix");
     _uMVMatrix = glContext.getUniformLocation(_shaderProgram, "uMVMatrix");
     _uViewMatrix = glContext.getUniformLocation(_shaderProgram, "uViewMatrix");
-
   }
   
   void _setMatrixUniforms() 
@@ -162,7 +139,7 @@ class Renderer
     glContext.uniformMatrix4fv(_uViewMatrix, false, tmpList);
   }
   
-  void start()
+  void start(Model model)
   {
     glContext.clearColor(0.0, 0.0, 0.0, 1.0);
     glContext.clearDepth(1.0);
@@ -173,8 +150,7 @@ class Renderer
     
     _initShaders();
     
-    _model = new Model();
-    _model.init(glContext);
+    _model = model;
     
     update(0.0);
   }
