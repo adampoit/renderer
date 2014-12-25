@@ -39,7 +39,6 @@ class Renderer
     glContext.viewport(0, 0, width, height);
     glContext.clear(WebGL.RenderingContext.COLOR_BUFFER_BIT | WebGL.RenderingContext.DEPTH_BUFFER_BIT);
     
-    // _pMatrix = makePerspectiveMatrix(radians(45.0), width / height, 0.1, 100.0);
     _pMatrix = makeOrthographicMatrix(-10.0, 10.0, -6.5, 6.5, -10.0, 10.0);
     
     _mvMatrix = new Matrix4.identity();
