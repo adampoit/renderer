@@ -12,8 +12,6 @@ class Renderer
 {
   Renderer(this.glContext, this.window);
   
-  WebGL.RenderingContext glContext;
-  
   void update(double time)
   {
     width = window.innerWidth;
@@ -111,6 +109,8 @@ class Renderer
   
   Matrix4 _pMatrix;
   Matrix4 _mvMatrix;
+  
+  WebGL.RenderingContext glContext;
   
   WebGL.UniformLocation _uPMatrix;
   WebGL.UniformLocation _uMVMatrix;

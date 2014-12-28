@@ -21,6 +21,15 @@ class Model
         .then((content) => _onDataLoaded(content, glContext));
   }
   
+  WebGL.Buffer get VertexPositionBuffer => _cubeVertexPositionBuffer;
+      
+  WebGL.Buffer get VertexIndexBuffer => _cubeVertexIndexBuffer;
+    
+  bool get IsLoaded => _loaded;
+  
+  Vector3 get Position                => _position;
+          set Position(Vector3 value) => _position = value;
+  
   void _onDataLoaded(String response, WebGL.RenderingContext glContext)
   {
     Map data = JSON.decode(response);
@@ -30,15 +39,6 @@ class Model
     
     _loaded = true;
   }
-  
-  WebGL.Buffer get VertexPositionBuffer => _cubeVertexPositionBuffer;
-    
-  WebGL.Buffer get VertexIndexBuffer => _cubeVertexIndexBuffer;
-    
-  bool get IsLoaded => _loaded;
-  
-  Vector3 get Position                => _position;
-          set Position(Vector3 value) => _position = value;
   
   Vector3 _position = new Vector3(0.0, 0.0, 0.0);
   bool _loaded = false;

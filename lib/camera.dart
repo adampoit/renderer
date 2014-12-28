@@ -3,21 +3,7 @@ library camera;
 import 'package:vector_math/vector_math.dart';
 
 class Camera
-{ 
-  Vector3 _position = new Vector3(0.0, 0.0, 0.0);
-  // Vector3 _rotation = new Vector3(0.0, 0.0, 0.0);
-  Vector3 _lookAt = new Vector3(0.0, 0.0, 1.0);
-  Vector3 _up = new Vector3(0.0, 1.0, 0.0);
-  
-  // Vector3 _lookAtRotation = new Vector3(0.0, 0.0, 1.0);
-  // Vector3 _upRotation = new Vector3(0.0, 1.0, 0.0);
-  
-  Vector3 get Position                => _position;
-          set Position(Vector3 value) => _position = value;
-          
-  Vector3 get Target                => _lookAt;
-          set Target(Vector3 value) => _lookAt = value;
-          
+{         
   Matrix4 lookAt()
   {
     Vector3 vz = (_position - _lookAt).normalized();
@@ -33,39 +19,13 @@ class Camera
     return inverseViewMatrix;
   }
   
-  /* Vector3 get Rotation                => _rotation;
-          set Rotation(Vector3 value) => _rotation = value;
+  Vector3 get Position                => _position;
+          set Position(Vector3 value) => _position = value;
+            
+  Vector3 get Target                => _lookAt;
+          set Target(Vector3 value) => _lookAt = value;
   
-  void MoveForward(double distance)
-  {
-    _position += _lookAt * distance;
-  }
-  
-  void MoveLeft(double distance)
-  {
-    Vector3 left;
-    
-    cross3(_lookAtRotation, _upRotation, left);
-    
-    _position += left * distance;
-  }
-  
-  void MoveRight(double distance)
-  {
-    Vector3 right;
-    
-    cross3(_upRotation, _lookAtRotation, right);
-    
-    _position += right * distance;
-  }
-  
-  void MoveUp(double distance)
-  {
-    _position += _upRotation * distance;
-  }
-  
-  void MoveDown(double distance)
-  {
-    _position -= _upRotation * distance;
-  } */
+  Vector3 _position = new Vector3(0.0, 0.0, 0.0);
+  Vector3 _lookAt = new Vector3(0.0, 0.0, 1.0);
+  Vector3 _up = new Vector3(0.0, 1.0, 0.0);
 }
