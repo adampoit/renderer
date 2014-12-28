@@ -6,30 +6,13 @@ import 'package:vector_math/vector_math.dart';
 import 'dart:typed_data';
 import 'camera.dart';
 import 'model.dart';
+import 'shader.dart';
 
 class Renderer
 {
   Renderer(this.glContext, this.window);
   
   WebGL.RenderingContext glContext;
-  WebGL.Program _shaderProgram;
-  
-  int width;
-  int height;
-  Window window;
-  
-  Matrix4 _pMatrix;
-  Matrix4 _mvMatrix;
-  
-  WebGL.UniformLocation _uPMatrix;
-  WebGL.UniformLocation _uMVMatrix;
-  WebGL.UniformLocation _uViewMatrix;
-  
-  int _aVertexPosition;
-  int _dimensions = 3;
-  
-  Camera _camera;
-  Model _model;
   
   void update(double time)
   {
@@ -47,7 +30,7 @@ class Renderer
     if (_model.IsLoaded)
     {
       glContext.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _model.VertexPositionBuffer);
-      glContext.vertexAttribPointer(_aVertexPosition, _dimensions, WebGL.RenderingContext.FLOAT, false, 0, 0);
+      glContext.vertexAttribPointer(_shader.AVertexPosition, _dimensions, WebGL.RenderingContext.FLOAT, false, 0, 0);
      
       glContext.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, _model.VertexIndexBuffer);
       _setMatrixUniforms();
@@ -55,6 +38,22 @@ class Renderer
     }
     
     window.requestAnimationFrame(update);
+  }
+  
+  void start(Model model)
+  {
+    glContext.clearColor(0.0, 0.0, 0.0, 1.0);
+    glContext.clearDepth(1.0);
+    
+    _camera = new Camera();
+    _camera.Position = new Vector3(0.5, 0.5, 0.5);
+    _camera.Target = new Vector3(0.0, 0.0, 0.0);
+    
+    _initShaders();
+    
+    _model = model;
+    
+    update(0.0);
   }
   
   void _initShaders() 
@@ -83,45 +82,13 @@ class Renderer
     }
     """;
     
-    // vertex shader compilation
-    WebGL.Shader vs = glContext.createShader(WebGL.RenderingContext.VERTEX_SHADER);
-    glContext.shaderSource(vs, vsSource);
-    glContext.compileShader(vs);
+    _shader = new Shader();
+    _shader.init(glContext, vsSource, fsSource);
     
-    // fragment shader compilation
-    WebGL.Shader fs = glContext.createShader(WebGL.RenderingContext.FRAGMENT_SHADER);
-    glContext.shaderSource(fs, fsSource);
-    glContext.compileShader(fs);
-    
-    // attach shaders to a WebGL program
-    _shaderProgram = glContext.createProgram();
-    glContext.attachShader(_shaderProgram, vs);
-    glContext.attachShader(_shaderProgram, fs);
-    glContext.linkProgram(_shaderProgram);
-    glContext.useProgram(_shaderProgram);
-    
-    /**
-     * Check if shaders were compiled properly. This is probably the most painful part
-     * since there's no way to "debug" shader compilation
-     */
-    if (!glContext.getShaderParameter(vs, WebGL.RenderingContext.COMPILE_STATUS)) { 
-      print(glContext.getShaderInfoLog(vs));
-    }
-    
-    if (!glContext.getShaderParameter(fs, WebGL.RenderingContext.COMPILE_STATUS)) { 
-      print(glContext.getShaderInfoLog(fs));
-    }
-    
-    if (!glContext.getProgramParameter(_shaderProgram, WebGL.RenderingContext.LINK_STATUS)) { 
-      print(glContext.getProgramInfoLog(_shaderProgram));
-    }
-    
-    _aVertexPosition = glContext.getAttribLocation(_shaderProgram, "aVertexPosition");
-    glContext.enableVertexAttribArray(_aVertexPosition);
-    
-    _uPMatrix = glContext.getUniformLocation(_shaderProgram, "uPMatrix");
-    _uMVMatrix = glContext.getUniformLocation(_shaderProgram, "uMVMatrix");
-    _uViewMatrix = glContext.getUniformLocation(_shaderProgram, "uViewMatrix");
+    var uniforms = _shader.getMatrixUniforms(glContext);
+    _uPMatrix = uniforms.perspectiveMatrix;
+    _uMVMatrix = uniforms.modelViewMatrix;
+    _uViewMatrix = uniforms.viewMatrix;
   }
   
   void _setMatrixUniforms() 
@@ -138,19 +105,20 @@ class Renderer
     glContext.uniformMatrix4fv(_uViewMatrix, false, tmpList);
   }
   
-  void start(Model model)
-  {
-    glContext.clearColor(0.0, 0.0, 0.0, 1.0);
-    glContext.clearDepth(1.0);
-    
-    _camera = new Camera();
-    _camera.Position = new Vector3(0.5, 0.5, 0.5);
-    _camera.Target = new Vector3(0.0, 0.0, 0.0);
-    
-    _initShaders();
-    
-    _model = model;
-    
-    update(0.0);
-  }
+  int width;
+  int height;
+  Window window;
+  
+  Matrix4 _pMatrix;
+  Matrix4 _mvMatrix;
+  
+  WebGL.UniformLocation _uPMatrix;
+  WebGL.UniformLocation _uMVMatrix;
+  WebGL.UniformLocation _uViewMatrix;
+  
+  int _dimensions = 3;
+  
+  Camera _camera;
+  Model _model;
+  Shader _shader;
 }
